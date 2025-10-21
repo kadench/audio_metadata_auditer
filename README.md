@@ -1,226 +1,171 @@
-# Music Shelf Audit
+# Music Library Metadata Editor (CLI-ONLY)
+![AI Used](https://img.shields.io/badge/%E2%9C%A8-AI%20USED-blue)
+[![TECH STACK](https://img.shields.io/badge/%F0%9F%92%BB-PYTHON%20|%203.10%2B-red)](https://python.org/downloads)
 
-**Type:** - Node.js + TypeScript CLI tool
-
-**Duration:** - Two weeks (Day 3 → Day 12)
-
-**Goal:** - Analyze a music folder’s metadata, detect duplicates and anomalies, and generate a detailed report of the collection’s completeness and structure.
-
----
-
-## Overview
-
-Music Shelf Audit is a lightweight command-line utility that scans a local music library and produces two key outputs:
-
-1. `report.md` - A human-readable summary including totals, durations, top artists and composers, missing tags, duplicates, and anomalies.
-2. `issues.csv` - A structured log containing one entry per problem file (missing tag, duplicate, or anomaly).
-
-The program performs a full read-only audit without renaming or modifying any files.
+I continued on with the music-related aspect. With the recent update of Alexa and Siri, there's not a point for my previous project anymore. This new one has a use even if technology advances.  
+May I introduce to you: a cli-based audio metadata auditor tool you can use to quickly and efficiently scan your audio (file) music library.
 
 ---
 
-## Purpose
-
-The goal of this project is to create a simple, self-contained tool that gives users a clear picture of the state of their music collection.
-It serves as a “library health check,” identifying which tags are missing, how consistent metadata is across files, and whether there are duplicate or abnormal entries.
-This makes it ideal for users who maintain large local libraries and want to improve metadata consistency before editing or reorganizing files with other tools.
+### Quick Install
+- Click [here]() to go to the most recent release page to download the program.  
+- Click [here](#syntax) to view syntax.
 
 ---
 
-## Features
+## How It Works
+This is a **read-only**, text-based summary scanner. It scans your folders, checks metadata, and reports problems, but never changes your files.  
+Each report includes:
+1. A health bar showing the overall state of your library  
+2. Quick totals (albums, tracks, size, duration)  
+3. A short list of albums with any problems found
 
-- Scans all supported audio files (`.mp3`, `.flac`, `.m4a`, `.wav`, `.ogg`)
-- Reads and records:
+Example:
+```txt
+"E:\Music" Library Scan
+==============================================================
+Health: [===============================.....] 85%
+Albums: 42  Tracks: 514  Size: 18.4 GB  Duration: 1d 3h 28m
+==============================================================
 
-  - Artist, album, title, composer
-  - Duration, sample rate, bit depth, codec
-- Reports:
-
-  - Missing metadata (artist, album, title, duration)
-  - Duplicates (based on file size + duration + title heuristic)
-  - Technical anomalies (low sample rate, extreme duration, etc.)
-- Summarizes:
-
-  - Total files, total duration, average track length
-  - Top 10 artists and composers
-  - Missing-tag counts
-- Outputs:
-
-  - Markdown summary (`report.md`)
-  - CSV issue log (`issues.csv`)
-
----
-
-## Tech Stack
-
-- Node.js 20+
-- TypeScript 5
-- music-metadata (metadata extraction)
-- fast-glob (directory scanning)
-- csv-writer (CSV output)
-- tsx (TypeScript runner)
-- Optional: SQLite (for cached audits, stretch goal)
-
----
-
-## File Structure
-
-*(Subject to change as development continues)*
-
-```
-music-shelf-audit/
-  README.md
-  package.json
-  tsconfig.json
-  /src
-    /cli/
-      index.ts
-    /core/
-      scan.ts
-      model.ts
-      hash.ts
-    /report/
-      renderMarkdown.ts
-      writeCsv.ts
-    /persistence/
-      sqlite.ts
-  /test/
-    scan.test.ts
+[WARN] Hybrid Theory (Linkin Park)
+    - Cover artwork differs across tracks in this album.
 ```
 
 ---
 
-## Naming and Conventions
+## Command Options
 
-| Category      | Convention                                            | Example                                      |
-| ------------- | ----------------------------------------------------- | -------------------------------------------- |
-| Branches      | feature/<slug>, fix/<slug>, chore/<slug>, docs/<slug> | feature/scanner                              |
-| Commits       | Conventional commit prefixes                          | feat: add tag reader                         |
-| Files/Folders | kebab-case                                            | /src/core/hash.ts                            |
-| Variables     | camelCase                                             | totalDuration                                |
-| Types/Classes | PascalCase                                            | TrackRecord                                  |
-| CLI Name      | `msa`                                                 | `npx tsx src/cli/index.ts --path "E:\Music"` |
+1. `--folder` / `-f`  
+**Required.** Tells the program which folder to scan. Without it, the program stops with an error.
 
----
+2. `--terminal` / `-t`  
+Shows the progress bar and final results in your command window.  
+If not used, results only appear if no file or clipboard option is selected.
 
-## Acceptance Criteria (v0.1.0)
+3. `--to-file` / `-tf`  
+Saves the report to a text file. Does not change the content, just the destination.
 
-- CLI scans a directory and completes successfully on a medium library (<30,000 files).
-- report.md includes:
+4. `--output-path` / `-op`  
+Sets where the output file is saved when using `--to-file`.  
+If not used, the file is created in the same directory as the program.
 
-  - Totals and total duration
-  - Average track length
-  - Top artists and composers
-  - Missing-tag counts
-  - Duplicate summary
-  - Anomalies section
-- issues.csv lists all files with missing tags, duplicates, or anomalies.
-- The tool handles errors gracefully and skips unreadable files.
-- The tool performs strictly read-only operations.
+5. `--copy` / `-c`  
+Copies the finished report to your clipboard instead of saving or printing it.
+
+6. `--max-depth` / `-md`  
+Sets how many subfolders deep the program scans. The default is **5**.  
+Does not affect the format of the report.
+
+7. `--per-album` / `-pa`  
+Adds each album’s total duration and size to its header line.  
 
 ---
 
-## Day-by-Day Plan
+### #7 Example
+**Before:**
+```txt
+[WARN] Hybrid Theory (Linkin Park):
+    - Cover artwork differs across tracks.
+```
 
-### Week 1
-
-**Day 3 (Today)**
-
-- Initialize TypeScript project (`tsx`, `eslint`, `prettier`)
-- Add directory scanner using `fast-glob`
-- Print list of detected files
-- Branch: `feature/scanner`
-
-**Day 4**
-
-- Integrate `music-metadata` for reading basic tags (artist, album, title, composer, duration, sample rate, bit depth)
-- Print sample metadata for first few tracks
-- Branch: `feature/tag-reader`
-
-**Day 5**
-
-- Compute totals and averages
-- Display top artists and composers
-- Branch: `feature/aggregates`
-
-**Day 6**
-
-- Implement duplicate heuristic (file size + duration + normalized title)
-- Track missing tags per category
-- Branch: `feature/duplicates`
-
-### Week 2
-
-**Day 7 (Monday)**
-
-- Generate `report.md` with summary sections
-- Branch: `feature/report-markdown`
-
-**Day 8 (Tuesday)**
-
-- Implement `issues.csv` with problem_type and details columns
-- Branch: `feature/issues-csv`
-
-**Day 9 (Wednesday)**
-
-- Add anomaly checks: zero duration, low sample rate, extreme length, bit-depth mismatch
-- Branch: `feature/anomalies`
-
-**Day 10 (Thursday)**
-
-- Add CLI flags (`--path`, `--out`, `--include`, `--exclude`, `--dry-run`)
-- Branch: `feature/cli-flags`
-
-**Day 11 (Friday)**
-
-- Large folder test; add try/catch for metadata read errors
-- Branch: `fix/stability`
-
-**Day 12 (Saturday)**
-
-- Final documentation polish, sample report outputs, tag `v0.1.0`
-- Merge PR into `main`
+**With `--per-album`:**
+```txt
+[WARN] Hybrid Theory (Linkin Park) | Duration: 47m 2s, Size: 428.32 MB
+    - Cover artwork differs across tracks.
+```
 
 ---
 
-## Stretch Goals
-
-- Config file (`audit.config.json`) for defaults
-- SQLite caching for repeat runs
-- “Library Health Score” (0–100) metric based on missing tags and anomalies
-
----
-
-## Scope Reduction Rules
-
-If behind schedule:
-
-1. Remove composer stats (keep artist only).
-2. Limit anomalies to two checks (zero duration, low sample rate).
-3. Keep duplicate summary only (no detailed duplicate listing).
-4. Prioritize stability and correctness over feature count.
+8. `--no-quick-stats` / `-nqs`  
+Removes the default quick stats line:
+```txt
+Albums: 42  Tracks: 514  Size: 18.4 GB  Duration: 1d 3h 28m
+```
+The health bar still appears, but totals are hidden.
 
 ---
 
-## Risks and Mitigation
-
-| Risk                      | Mitigation                                       |
-| ------------------------- | ------------------------------------------------ |
-| Large library performance | Process files in batches; avoid full memory load |
-| Metadata read failures    | Use try/catch and skip invalid files             |
-| Report formatting drift   | Lock template by Day 9                           |
-| Optional SQLite overrun   | Defer database until after v0.1.0                |
+9. `--debug` / `-d`  
+Adds a debug section at the end showing scanned paths, nested folder depths and any skipped files.  
 
 ---
 
-## Deliverables
-
-- `report.md` — full summary
-- `issues.csv` — detailed issue log
-- Updated `README.md` with documentation and sample outputs
-- Optional: `/sample-output/` folder for demonstration
+### #9 Example
+```text
+Debug
+[debug] entering: {file_path} - {album_name} (depth={depth_amount})
+[debug] entering: {file_path} - {album_name} (depth={depth_amount})
+[debug] entering: {file_path} - {album_name} (depth={depth_amount})
+```
 
 ---
 
-**Project Goal Summary:**
-Music Shelf Audit analyzes a music library’s metadata and generates a clear, read-only report showing missing tags, duplicates, and anomalies—helping users evaluate the completeness and integrity of their collection.
+10. `--help` / `-h`  
+Shows all available options and descriptions. Exits immediately after displaying help.
+
+---
+
+## How to Install
+
+You can run this program **two different ways**, depending on your preference:
+
+### Option 1: Run the EXE Directly (no setup required)
+1. Download the latest `.exe` from the [Releases page]().  
+2. Place it anywhere convenient (for example, on your Desktop or inside your Music folder).  
+3. Open that folder in File Explorer, click in the address bar, type `cmd`, and press Enter.  
+4. Run the program from that folder:
+   ```bash
+   ama.exe -f "E:\Music" -t
+   ```
+   The scan runs right where the `.exe` is located. No installation or PATH setup needed.
+
+---
+
+### Option 2: Run from Python Source
+1. Make sure [Python 3.10 or newer](https://python.org/downloads) is installed.  
+2. Download the `.py` version instead of the `.exe`.  
+3. Open the folder containing the script.  
+4. In the address bar, type `cmd` and press Enter.  
+5. Run the command:
+   ```bash
+   python ama.py -f "E:\Music" -t
+   ```
+   You can also add extra flags (like `-pa` or `-nqs`) in the same way.
+    > Optional: You can download the `ama_unittest.py` to view the tests AI gave me.
+
+Both versions produce identical results.  
+
+---
+
+## Syntax
+```txt
+usage: ama.py [-h] --folder FOLDER [--to-file] [--terminal]
+               [--output-path OUTPUT_PATH] [--copy] [--debug]
+               [--max-depth MAX_DEPTH] [--per-album] [--no-quick-stats]
+
+Return an overall health report of all audio files in a given folder.
+
+options:
+  -h, --help            show this help message and exit
+  --folder, -f FOLDER   Path of the folder to scan.
+  --to-file, -tf        Save results to a file.
+  --terminal, -t        Print results to the terminal.
+  --output-path, -op OUTPUT_PATH
+                        File path to save results to.
+  --copy, -c            Copy results to clipboard.
+  --debug, -d           Include a debug section at the end.
+  --max-depth MAX_DEPTH
+                        Maximum subfolder depth to scan (default 5).
+  --per-album, -pa      Show per-album duration and size on the header line.
+  --no-quick-stats, -nqs
+                        Hide the global quick stats line (the line under the health bar).
+```
+
+---
+
+## System Requirements
+- Windows 10 or later  
+- Read-only file access to scanned folders  
+- About 512 MB RAM recommended for large libraries  
+    > Optional: Python 3.10 or newer if running the `.py` version
