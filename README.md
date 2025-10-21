@@ -8,7 +8,7 @@ May I introduce to you: a cli-based audio metadata auditor tool you can use to q
 ---
 
 ### Quick Install
-- Click [here]() to go to the most recent release page to download the program.  
+- Click [here](https://github.com/kadench/audio_metadata_auditer/releases/tag/v1.0.0) to go to the most recent release page to download the program.  
 - Click [here](#syntax) to view syntax.
 
 ---
@@ -111,7 +111,7 @@ Shows all available options and descriptions. Exits immediately after displaying
 You can run this program **two different ways**, depending on your preference:
 
 ### Option 1: Run the EXE Directly (no setup required)
-1. Download the latest `.exe` from the [Releases page]().  
+1. Download the latest `.exe` from the [Releases page](https://github.com/kadench/audio_metadata_auditer/releases/tag/v1.0.0).  
 2. Place it anywhere convenient (for example, on your Desktop or inside your Music folder).  
 3. Open that folder in File Explorer, click in the address bar, type `cmd`, and press Enter.  
 4. Run the program from that folder:
