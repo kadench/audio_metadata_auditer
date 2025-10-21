@@ -36,28 +36,28 @@ Albums: 42  Tracks: 514  Size: 18.4 GB  Duration: 1d 3h 28m
 
 ## Command Options
 
-1. `--folder` / `-f`  
-**Required.** Tells the program which folder to scan. Without it, the program stops with an error.
+1. ***Required.*** `--folder` / `-f`  
+Tells the program which folder to scan. Without it, the program stops with an error.
 
-2. `--terminal` / `-t`  
+2. ***Default.*** `--terminal` / `-t`  
 Shows the progress bar and final results in your command window.  
 If not used, results only appear if no file or clipboard option is selected.
 
-3. `--to-file` / `-tf`  
+4. `--to-file` / `-tf`  
 Saves the report to a text file. Does not change the content, just the destination.
 
-4. `--output-path` / `-op`  
+5. `--output-path` / `-op`  
 Sets where the output file is saved when using `--to-file`.  
 If not used, the file is created in the same directory as the program.
 
-5. `--copy` / `-c`  
+6. `--copy` / `-c`  
 Copies the finished report to your clipboard instead of saving or printing it.
 
-6. `--max-depth` / `-md`  
-Sets how many subfolders deep the program scans. The default is **5**.  
+7. ***(Default is 5)*** `--max-depth` / `-md`  
+Sets how many subfolders deep the program scans.
 Does not affect the format of the report.
 
-7. `--per-album` / `-pa`  
+9. `--per-album` / `-pa`  
 Adds each album’s total duration and size to its header line.  
 
 ---
